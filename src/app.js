@@ -9,6 +9,7 @@ const jwt = require('./jsonwebtokenMngr');
 const helper = require('./helper');
 
 app.use(express.json());
+app.use(express.static('public'));
 // app.use((_req, res, next) => {    
 //     res.header('Access-Control-Expose-Headers', 'X-auth-token');
 //     res.header('Access-Control-Allow-Headers', 'X-auth-token');    
@@ -301,27 +302,87 @@ app.get('/api/sellorder',  (req,res)=>{
 });//Get sell order for a user Route
 app.get('/api/aggregator',  (req,res)=>{
     try{
-        Products.find({}).then(Prodres=>{
-            res.json(Prodres);
-            if(Prodres && Prodres.length > 0){
+        Products.find({}).then(Prodres=>{            
+            if(Prodres && Prodres.length > 0){  
+                console.log("Here-->1");
+                let ordersToExec = [];
                 for(let i=0;i<Prodres.length;i++){
-                    
+                    console.log("In Here-> ",i);
+                    if(Prodres[i].maxPricedBid && Prodres[i].maxPricedBid.length > 0 && !Prodres[i].executionStatus){
+                        let te_bid = Prodres[i].maxPricedBid[0];
+                        te_bid["orderID"] = Prodres[i].orderID;
+                        ordersToExec.push(te_bid);
+                        Products.findOneAndUpdate({"orderID":Prodres[i].orderID},{
+                            $set:{
+                                "executionStatus":true
+                            }
+                        },{upsert:true,new:true}).then(prodtbres=>{
+                            console.log("Updated order with orderID: ",Prodres[i].orderID);
+                        }).catch(prodtberr=>{
+                            console.log("Failed to update order with orderID: ",Prodres[i].orderID);
+                        })
+                    }
                 }
-            }else{
-                res.json({'errMessage':'No orders present.'});
-            }
-        }).catch(Proderr=>{
-            res.status(500).json({'errMessage':'Internal Server Error: '+Proderr});
-        })
-    }catch(e){
-        res.status(500).json({'errMessage':'Internal Server Error'});
-    }
+                console.log(ordersToExec);
+                if(ordersToExec.length > 0){
+                    for(let i=0;i<ordersToExec.length;i++){
+                        console.log("In Here too-> ",i)
+                        let userID = ordersToExec[i].email;
+                        let orderID = ordersToExec[i].orderID;
+                        SinUserInfo.findOneAndUpdate({userID},
+                            {"executedOrders":[{"orderID":orderID}]},
+                            {upsert:true,new:true}).then(finUpres=>{
+                                if(i === ordersToExec.length-1){
+                                    finalAggregator(res);
+                                }
+                            }).catch(finUperr=>{
+                                console.log("Failed to update order with userID: ",userID);
+                            });
+                        }
+                    }else{
+                        res.json({"errMessage":"No orders to execute."});
+                    }
+                    
+                }else{
+                    res.json({'errMessage':'No orders present.'});
+                }
+            }).catch(Proderr=>{
+                res.status(500).json({'errMessage':'Internal Server Error: '+Proderr});
+            })
+        }catch(e){
+            res.status(500).json({'errMessage':'Internal Server Error'});
+        }
 });//Aggregator route for excuting all orders till then.
-
-app.get('*',(req,res)=>{
-    res.status(404).json({'errMessage':'ROute not found'});
-})
-
-app.listen(Port,()=>{
-    console.log(`Server is listening on port ${Port}.`);
-});
+    
+var finalAggregator = (res) =>{
+    try{
+        Products.find({}).then(finalResult=>{
+            let execOrders = [];
+                let unExecOrders = [];
+                for(let i=0;i<finalResult.length;i++){
+                    if(finalResult[i].executionStatus){
+                        execOrders.push(finalResult[i]);
+                    }else{
+                        unExecOrders.push(finalResult[i]);
+                    }
+                }
+                let finRes = {
+                    "execOrders":execOrders,
+                    "unExecOrders":unExecOrders
+                };
+                res.json(finRes);
+            }).catch(finalErr=>{
+                res.status(500).json({'errMessage':'Internal Server Error: '+finalErr});
+            })
+        }catch(e){
+            res.status(500).json({'errMessage':'Internal Server Error: '+e});
+        }
+    }
+    
+    app.get('/',(req,res)=>{
+        res.status(404).json({'errMessage':'ROute not found'});
+    })
+    
+    app.listen(Port,()=>{
+        console.log(`Server is listening on port ${Port}.`);
+    });
