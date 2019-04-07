@@ -375,15 +375,28 @@ app.get('/api/aggregator',  (req,res)=>{
                     for(let i=0;i<ordersToExec.length;i++){                        
                         let userID = ordersToExec[i].email;
                         let orderID = ordersToExec[i].orderID;
-                        SinUserInfo.findOneAndUpdate({userID},
-                            {"executedOrders":[{"orderID":orderID}]},
-                            {upsert:true,new:true}).then(finUpres=>{
-                                if(i === ordersToExec.length-1){
-                                    finalAggregator(res);
+                        SinUserInfo.find({userID}).then(sinuserres=>{
+                            console.log(sinuserres);
+                            if(sinuserres && sinuserres.length > 0){
+                                let execbids = sinuserres[0].executedOrders || [];
+                                console.log("<-------------------------------->");
+                                execbids.push({"orderID":orderID});
+                                console.log(execbids);
+                                SinUserInfo.findOneAndUpdate({userID},
+                                    {"executedOrders":execbids},
+                                    {upsert:true,new:true}).then(finUpres=>{
+                                        if(i === ordersToExec.length-1){
+                                            finalAggregator(res);
+                                        }
+                                    }).catch(finUperr=>{
+                                        console.log("Failed to update order with userID: ",userID);
+                                    });
+                                }else{
+                                    res.json({"errMessage":"No orders to execute."});
                                 }
-                            }).catch(finUperr=>{
-                                console.log("Failed to update order with userID: ",userID);
-                            });
+                            }).catch(sinusererr=>{
+                                res.status(500).json({'errMessage':'Internal Server Error: '+sinusererr});
+                            })
                         }
                     }else{
                         res.json({"errMessage":"No orders to execute."});
