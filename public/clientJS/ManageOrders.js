@@ -89,7 +89,7 @@ function postSellOrder(){
         let price = document.getElementById("prc").value;
         let lowestSellPrice = document.getElementById("lep").value;
         if(itemName.length > 0 && price > 0 && lowestSellPrice > 0){
-            if(lowestSellPrice < price){
+            if(parseInt(lowestSellPrice) < parseInt(price)){
                 let data = {itemName,price,lowestSellPrice};
                 let Sellurl = "http://localhost:3001/api/sellorder";
                 axios.post(Sellurl,data).then(res=>{
