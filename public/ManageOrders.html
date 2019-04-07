@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BidIT</title>       
+    <meta name="viewport" content="width=device-width, initial-scale=1">    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">        
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>      
+    <link rel="stylesheet" href="./clientCSS/ManageOrders.css">    
+    <script src="./clientJS/ManageOrders.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">BidIT</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="Dashboard.html">Dashboard</a></li>                                    
+            </li>
+            <li class="active"><a href="ManageOrders.html">Manage Orders</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">                
+            <li onclick="logout()"><a href="#"><span class="glyphicon glyphicon-log-in"></span>  Logout</a></li>
+        </ul>
+    </div>
+</nav> 
+<div class="orders-container">
+    <div class="row">
+        <div class="card1 section1" style="width: 45vw;">
+            <div class="card-body1"> 
+                <h1>Sell Order</h1> 
+                <div class="sellHolder">
+                    <div class="form-group">
+                        <label for="itmn">Item name:</label>
+                        <input type="text" class="form-control" id="itmn" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prc">Price ($):</label>
+                        <input type="number" class="form-control" id="prc" required> 
+                    </div>
+                    <div class="form-group">
+                        <label for="lep">Least Execution Price ($):</label>
+                        <input type="number" class="form-control" id="lep" required>
+                    </div>                
+                    <button onclick="postSellOrder()" type="button" id="submitOrder" class="btn btn-secondary">Submit Order</button>             
+                </div>
+            </div>
+        </div>        
+    </div>
+    <div class="row1" id="row1">                
+    </div>
+</div>
+</body>
+</html>

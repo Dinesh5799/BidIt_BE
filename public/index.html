@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BidIT</title>           
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./clientJS/index.js"></script>
+    <link rel="stylesheet" href="./clientCSS/styles.css">    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>        
+</head>
+<body>                         
+    <div class="container-fluid">
+        <div class="row no-gutter">
+            <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
+            <div class="col-md-8 col-lg-6">
+                <div class="login d-flex align-items-center py-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-9 col-lg-8 mx-auto">
+                                <h3 class="login-heading mb-4">Welcome back!</h3>
+                                <form>
+                                    <div class="form-label-group" id = "Username">
+                                        <input type="text" id="inputUsername" class="form-control" placeholder="Username" required>
+                                        <label for="inputUsername">Username</label>
+                                    </div>
+                                    <div class="form-label-group" id = "email">
+                                        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required>
+                                        <label for="inputEmail">Email address</label>
+                                    </div>
+                                    
+                                    <div class="form-label-group" id = "password">
+                                        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                                        <label for="inputPassword">Password</label>
+                                    </div>
+                                    <div class="form-label-group" id = "confirm_password">
+                                        <input type="password" id="inputConfirmPassword" class="form-control" placeholder="Confirm Password" required>
+                                        <label for="inputConfirmPassword">Confirm Password</label>
+                                    </div>
+                                    
+                                    <div class="custom-control custom-checkbox mb-3" id="rem-password">
+                                        <input  type="checkbox" class="custom-control-input" id="customCheck1">
+                                        <label class="custom-control-label" for="customCheck1">Remember password</label>
+                                    </div>
+                                    <button id="signInSignUp" class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" onclick="loginSignUp()">Sign in</button>
+                                    <div class="text-center">
+                                        <a id = "loginSignUpSwitch" class="small" href="#" onclick="showSignup()">Don't have an account yet?   SIGN UP</a></div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    </body>    
+    </html>

@@ -1,0 +1,94 @@
+.orders-container {
+    display: flex;    
+    margin: 1em 2em;
+}
+.row{    
+    margin-left: 2em    ;
+    border: 1px solid #999;
+    border-radius: .3em;
+}
+.row1{
+    width: 45vw;
+    margin-left: 4em;
+    border: 1px solid #999;
+    border-radius: .3em;
+}
+.section{
+    color:#333;
+    height: 80vh;        
+}
+h1{
+    color:#333;
+    font-size: 1.5em;
+    text-align: center;
+}
+.sellHolder{
+
+    width: 94%;
+    margin-left: 3%;
+}
+.form-group{
+    margin-top: 40px;
+}
+#submitOrder{
+    width: 60%;
+    margin-top: 40px;
+    margin-left: 20%;
+    margin-bottom: 20px;
+    background-color: #666;    
+    color: #fff;
+    outline: none;
+}
+#submitOrder:hover{
+    background-color: #333;
+    outline: none;
+}
+#noData{
+    display: block;    
+    margin-left: 25%;
+    width: 50%;
+    text-align: center;
+    font-size: 1em    
+}
+.card{
+    border: 1px solid #ccc;
+    width: 24rem;
+    height: 24rem;  
+    border-radius: 0.25em; 
+    float: left;
+    margin-left: 30px;
+    margin-top: 20px;   
+    margin-bottom: 10px; 
+}
+.card-title{
+    font-weight: bold;
+    text-align: center;    
+}
+p,.shower{
+    margin-left: 10px;
+    margin-top:15px;
+    font-size: 1em;
+    color: #000;    
+}
+.form-group1{
+    width: 96%;
+    margin-left: 2%;
+}
+.form-group1 label{
+    margin-left: 10px;
+    margin-top:15px;
+    font-size: 1em;
+    color: #000;
+    font-weight: normal;
+}
+.form-group1 input{
+    width: 50%;
+    margin-left: 10px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+}
+.custButton{
+    width: 60%;
+    margin-left: 20%;
+    margin-top: 20px;
+}
