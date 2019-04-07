@@ -1,7 +1,7 @@
 # BidIt_BE
-Instruction to run.
-1.)Clone/Download the project.
-2.)Open cmd in project directory.
-3.)Run the command <strong>npm install</strong>
-4.)Once all the dependencies are installed Run the command <strong>npm start</strong>
-5.)App can be accessed from http://localhost:3001.
+<p>Instruction to run.</p>
+<p>1.)Clone/Download the project.</p>
+<p>2.)Open cmd in project directory.</p>
+<p>3.)Run the command <strong>npm install</strong></p>
+<p>4.)Once all the dependencies are installed Run the command <strong>npm start</strong></p>
+<p>5.)App can be accessed from http://localhost:3001.</p>
