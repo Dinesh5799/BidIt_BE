@@ -352,94 +352,91 @@ app.get('/api/execOrders',  (req,res)=>{
 });//Get sell order for a user Route
 app.get('/api/aggregator',  (req,res)=>{
     try{
-        Products.find({}).then(Prodres=>{            
-            if(Prodres && Prodres.length > 0){                  
-                let ordersToExec = [];
-                for(let i=0;i<Prodres.length;i++){                    
-                    if(Prodres[i].maxPricedBid && Prodres[i].maxPricedBid.length > 0 && !Prodres[i].executionStatus){
-                        let te_bid = Prodres[i].maxPricedBid[0];
-                        te_bid["orderID"] = Prodres[i].orderID;
-                        ordersToExec.push(te_bid);
-                        Products.findOneAndUpdate({"orderID":Prodres[i].orderID},{
-                            $set:{
-                                "executionStatus":true
-                            }
-                        },{upsert:true,new:true}).then(prodtbres=>{
-                            console.log("Updated order with orderID: ",Prodres[i].orderID);
-                        }).catch(prodtberr=>{
-                            console.log("Failed to update order with orderID: ",Prodres[i].orderID);
-                        })
+        Products.find({}).then(AllOrderres=>{
+            if(AllOrderres && AllOrderres.length > 0){
+                let OrdersToExec = [];
+                let userInfo = [];
+                for(let i=0;i<AllOrderres.length;i++){
+                    if(AllOrderres[i].maxPricedBid.length > 0 && !AllOrderres[i].executionStatus){
+                        let temp_obj = {};
+                        OrdersToExec.push(AllOrderres[i].orderID);
+                        temp_obj.orderID = AllOrderres[i].orderID;
+                        temp_obj.userID = AllOrderres[i].maxPricedBid[0].email;
+                        userInfo.push(temp_obj);
                     }
-                }                
-                if(ordersToExec.length > 0){
-                    for(let i=0;i<ordersToExec.length;i++){                        
-                        let userID = ordersToExec[i].email;
-                        let orderID = ordersToExec[i].orderID;
-                        SinUserInfo.find({userID}).then(sinuserres=>{
-                            console.log(sinuserres);
-                            if(sinuserres && sinuserres.length > 0){
-                                let execbids = sinuserres[0].executedOrders || [];
-                                console.log("<-------------------------------->");
-                                execbids.push({"orderID":orderID});
-                                console.log(execbids);
-                                SinUserInfo.findOneAndUpdate({userID},
-                                    {"executedOrders":execbids},
-                                    {upsert:true,new:true}).then(finUpres=>{
-                                        if(i === ordersToExec.length-1){
-                                            finalAggregator(res);
-                                        }
-                                    }).catch(finUperr=>{
-                                        console.log("Failed to update order with userID: ",userID);
-                                    });
-                                }else{
-                                    res.json({"errMessage":"No orders to execute."});
-                                }
-                            }).catch(sinusererr=>{
-                                res.status(500).json({'errMessage':'Internal Server Error: '+sinusererr});
-                            })
+                }                                
+                if(OrdersToExec.length > 0){
+                    Products.updateMany({orderID:{$in:OrdersToExec}},{
+                        $set:{
+                            "executionStatus":true
                         }
-                    }else{
-                        res.json({"errMessage":"No orders to execute."});
-                    }
-                    
+                    },{upsert:true}).then(execUpdateres=>{
+                        //Update userinfo here
+                        let user_obj = {};                        
+                        for(let u=0;u<userInfo.length;u++){
+                            if(user_obj[userInfo[u].userID] === undefined){                                
+                                user_obj[userInfo[u].userID]= [];
+                            }
+                            user_obj[userInfo[u].userID].push({"orderID":userInfo[u].orderID});                            
+                        }                        
+                        let userCo = 0;
+                        let totalUserCo = Object.keys(user_obj).length;
+                        for(let i in user_obj){
+                            SinUserInfo.findOneAndUpdate({"userID":i},{
+                                $set:{
+                                    "executedOrders":user_obj[i]
+                                }
+                            },{new:true}).then(eachUserres=>{                               
+                                userCo += 1;
+                                if(userCo === totalUserCo){
+                                    finAggregatore(res);
+                                }
+                            })                            
+                        }
+                    }).catch(execUpdateerr=>{
+                        res.status(500).json({'errMessage':'Internal Server Error: '+execUpdateerr});
+                    })
                 }else{
-                    res.json({'errMessage':'No orders present.'});
+                    res.json({"errMessage":"No orders to execute."});
                 }
-            }).catch(Proderr=>{
-                res.status(500).json({'errMessage':'Internal Server Error: '+Proderr});
-            })
-        }catch(e){
-            res.status(500).json({'errMessage':'Internal Server Error'});
-        }
-    });//Aggregator route for excuting all orders till then.
-    
-    var finalAggregator = (res) =>{
-        try{
-            Products.find({}).then(finalResult=>{
-                let execOrders = [];
-                let unExecOrders = [];
-                for(let i=0;i<finalResult.length;i++){
-                    if(finalResult[i].executionStatus){
-                        execOrders.push(finalResult[i]);
+            }
+        })
+        .catch(AllOrdererr=>{
+            res.status(500).json({'errMessage':'Internal Server Error: '+AllOrdererr});
+        })
+        
+    }catch(e){
+        res.status(500).json({'errMessage':'Internal Server Error'});
+    }
+});//Aggregator route for excuting all orders till then.
+
+var finAggregatore = (res)=>{
+    try{        
+        Products.find({}).then(finres=>{
+            if(finres && finres.length > 0){
+                let orders = {};
+                orders.execOrders = [];
+                orders.unExecOrders = [];
+                for(let i=0;i<finres.length;i++){
+                    if(finres[i].executionStatus){
+                        orders.execOrders.push(finres[i]);
                     }else{
-                        unExecOrders.push(finalResult[i]);
+                        orders.unExecOrders.push(finres[i]);
                     }
                 }
-                let finRes = {
-                    "execOrders":execOrders,
-                    "unExecOrders":unExecOrders
-                };
-                res.json(finRes);
-            }).catch(finalErr=>{
-                res.status(500).json({'errMessage':'Internal Server Error: '+finalErr});
-            })
-        }catch(e){
-            res.status(500).json({'errMessage':'Internal Server Error: '+e});
-        }
+                res.json(orders);
+            }else{
+                res.json({"errMessage":"No orders to execute."});
+            }
+        }).catch(finerr=>{
+            res.status(500).json({'errMessage':'Internal Server Error: '+finerr});
+        })
+    }catch(e){
+        res.status(500).json({'errMessage':'Internal Server Error: '+e});
     }
-    
-    app.get('/', (_req, res) => res.sendFile('index.html'));
-    
-    app.listen(Port,()=>{
-        console.log(`Server is listening on port ${Port}.`);
-    });
+}
+app.get('/', (_req, res) => res.sendFile('index.html'));
+
+app.listen(Port,()=>{
+    console.log(`Server is listening on port ${Port}.`);
+});
