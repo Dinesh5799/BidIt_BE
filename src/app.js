@@ -389,7 +389,7 @@ app.get('/api/aggregator',  (req,res)=>{
                             },{new:true}).then(eachUserres=>{                               
                                 userCo += 1;
                                 if(userCo === totalUserCo){
-                                    finAggregatore(res);
+                                    finAggregator(res);
                                 }
                             })                            
                         }
@@ -410,7 +410,7 @@ app.get('/api/aggregator',  (req,res)=>{
     }
 });//Aggregator route for excuting all orders till then.
 
-var finAggregatore = (res)=>{
+var finAggregator = (res)=>{
     try{        
         Products.find({}).then(finres=>{
             if(finres && finres.length > 0){
