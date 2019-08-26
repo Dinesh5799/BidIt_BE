@@ -15,19 +15,19 @@ window.onload = function(){
 function OrderFetcher(){
     console.log("Fetching Orders.");
     try{
-        var Buyurl = "http://localhost:3001/api/buyorder";                      
+        var Buyurl = "/api/buyorder";                      
         axios.get(Buyurl).then(res=>{
             generateCards(res,"BuyOrders", "Buy");
         }).catch(err=>{
             alert("Failed to fetch buy orders: ",err);
         })
-        var Sellurl = "http://localhost:3001/api/sellorder";                      
+        var Sellurl = "/api/sellorder";                      
         axios.get(Sellurl).then(res=>{
             generateCards(res,"SellOrders","Sell");
         }).catch(err=>{
             alert("Failed to fetch Sell orders: ",err);
         })
-        var Execurl = "http://localhost:3001/api/execOrders";                      
+        var Execurl = "/api/execOrders";                      
         axios.get(Execurl).then(res=>{
             generateCards(res,"ExecOrders","Executed");
         }).catch(err=>{

@@ -26,7 +26,7 @@ function login(){
         var userNameChk = re.test(email);
         var passwordChk = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,16}$/.test(password);
         if(userNameChk && passwordChk){
-            var url = "http://localhost:3001/api/login";
+            var url = "/api/login";
             var data = {
                 email,
                 password
@@ -75,7 +75,7 @@ function SignUp(){
         var passwordChk = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,16}$/.test(password);
         if(userNameChk && passwordChk){
             if(password === confirm_password){
-                var url = "http://localhost:3001/api/signup";
+                var url = "/api/signup";
                 var data = {
                     username,
                     password,
