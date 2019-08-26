@@ -13,7 +13,7 @@ window.onload = function(){
 }
 function showBuyOrders(){
     try{       
-        let buyUrl = "http://localhost:3001/api/searchbuyorder"; 
+        let buyUrl = "/api/searchbuyorder"; 
         axios.get(buyUrl).then(res=>{
             generateCards(res,"row1","Buy");
         }).catch(err=>{
@@ -66,7 +66,7 @@ document.addEventListener('click', function (event) {
                 let data = {};
                 data.orderID = orderID;
                 data.bidPrice = bidPrice;
-                let buyurl = "http://localhost:3001/api/buyorder";
+                let buyurl = "/api/buyorder";
                 axios.post(buyurl,data).then(res=>{
                     alert("Buy order created successfully.");
                     console.log(res);
@@ -91,7 +91,7 @@ function postSellOrder(){
         if(itemName.length > 0 && price > 0 && lowestSellPrice > 0){
             if(parseInt(lowestSellPrice) < parseInt(price)){
                 let data = {itemName,price,lowestSellPrice};
-                let Sellurl = "http://localhost:3001/api/sellorder";
+                let Sellurl = "/api/sellorder";
                 axios.post(Sellurl,data).then(res=>{
                     document.getElementById("itmn").value = "";
                     document.getElementById("prc").value = "";
