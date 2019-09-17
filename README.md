@@ -10,5 +10,5 @@
 <p>2.)After successful signup, he can login into his account and place orders(Bid) either buy or sell</p>
 <p>3.)All the orders he placed can be seen on his dashboard</p>
 <p>4.) While placing a sell order user specifies min bid price i.e. if some other user is trying to place a buy order on this it will only be executed if order price is greater than min bid price.</p>
-<p>At end of the day/anytime all the orders are manually executed using the below app</p>
-<p>6.)Along with this app to execute orders use the app @ <a href="https://github.com/Dinesh9059/BidIT-Aggregator">BidIT-Aggregator</a></p>
+<p>At end of the day/anytime all the orders are manually executed using the below webapp</p>
+<p>6.)Along with this webapp to execute orders use the webapp @ <a href="https://github.com/Dinesh9059/BidIT-Aggregator">BidIT-Aggregator</a></p>
